@@ -1,35 +1,50 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import "./App.css";
+import React, { useState } from "react";
+import ImageUpload from "./components/ImageUpload";
+import CategoryManager from "./components/CategoryManager";
+import ValidationLog from "./components/ValidationLog";
 
-function App() {
-  const [count, setCount] = useState(0)
+const App = () => {
+  const [allowedCategories, setAllowedCategories] = useState([
+    "Clothes",
+    "Footwear",
+  ]);
+  const [prohibitedCategories, setProhibitedCategories] = useState([
+    "Weapons",
+    "Tobacco",
+  ]);
+  const [logs, setLogs] = useState([]);
+
+  const handleImageUpload = (file) => {
+    const success = Math.random() > 0.5;
+    setLogs([
+      ...logs,
+      {
+        success,
+        message: success
+          ? `Image "${file.name}" accepted.`
+          : `Image "${file.name}" rejected.`,
+      },
+    ]);
+  };
 
   return (
-    <>
-      <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
-}
+    <div className="App">
+      <h1>My Fashion Trunk</h1>
+      <ImageUpload onImageUpload={handleImageUpload} />
+      <CategoryManager
+        title="Allowed Categories"
+        categories={allowedCategories}
+        onCategoryChange={setAllowedCategories}
+      />
+      <CategoryManager
+        title="Prohibited Categories"
+        categories={prohibitedCategories}
+        onCategoryChange={setProhibitedCategories}
+      />
+      <ValidationLog logs={logs} />
+    </div>
+  );
+};
 
-export default App
+export default App;
